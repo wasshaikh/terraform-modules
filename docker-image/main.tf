@@ -36,16 +36,32 @@ resource "aws_elastic_beanstalk_application" "default" {
 // Create release
 resource "aws_s3_bucket" "default" {
 }
+resource "aws_s3_bucket_object" "authentication" {
+	bucket = aws_s3_bucket.default.id
+	key = "docker-config.json"
+	content = jsonencode({
+		auths = {
+			(split("/", var.image)[0]) = {
+				"password" = var.registry_password
+				"username" = var.registry_username
+			}
+		}
+	})
+}
 resource "aws_s3_bucket_object" "default" {
 	bucket = aws_s3_bucket.default.id
 	key = "Dockerrun.aws.json"
 	content = jsonencode({
 		"AWSEBDockerrunVersion" = "1"
+		"Authentication" = {
+			"Bucket" = aws_s3_bucket.default.id
+			"Key" = aws_s3_bucket_object.authentication.id
+		}
 		"Image" = {
 			"Name" = var.image
 		}
 		"Ports" = [
-			{ "ContainerPort" = "8080" }
+			{ "ContainerPort" = var.port }
 		]
 	})
 	content_type = "application/json"
@@ -61,7 +77,7 @@ resource "aws_elastic_beanstalk_application_version" "default" {
 resource "aws_elastic_beanstalk_environment" "default" {
 	application = aws_elastic_beanstalk_application.default.name
 	name = var.name
-	solution_stack_name = "64bit Amazon Linux 2 v3.0.3 running Docker"
+	solution_stack_name = "64bit Amazon Linux 2 v3.1.0 running Docker"
 	tier = var.type == "website" ? "WebServer" : "Worker"
 	version_label = aws_elastic_beanstalk_application_version.default.id
 

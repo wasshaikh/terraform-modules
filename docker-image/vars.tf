@@ -1,5 +1,6 @@
 variable "environment" {
 	default = []
+	description = "A list of environmental varaibles for the application"
 	type = list(
 		object({
 			key = string
@@ -8,6 +9,7 @@ variable "environment" {
 	)
 }
 variable "image" {
+	description = "The application's docker image"
 	type = string
 }
 variable "max" {
@@ -21,6 +23,7 @@ variable "min" {
 	type = number
 }
 variable "name" {
+	description = "Name of the application"
 	type = string
 
 	validation {
@@ -28,8 +31,23 @@ variable "name" {
 		error_message = "Variable 'name' must between 5 - 40 characters in length."
 	}
 }
+variable "registry_password" {
+	default = ""
+	description = "Password for access to private docker image registry"
+	type = string
+}
+variable "registry_username" {
+	default = ""
+	description = "Username for access to private docker image registry"
+	type = string
+}
+variable "port" {
+	description = "The exposed container port for the Docker image"
+	type = number
+}
 variable "type" {
 	default = "worker"
+	description = "The type of instance that will be running"
 	type = string
 
 	validation {
