@@ -42,9 +42,9 @@ variable "registry_username" {
 	type = string
 }
 variable "port" {
-	default = ""
+	default = 0
 	description = "The exposed container port for the Docker image"
-	type = string
+	type = number
 }
 variable "type" {
 	default = "worker"
