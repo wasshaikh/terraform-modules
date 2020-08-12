@@ -42,6 +42,7 @@ variable "registry_username" {
 	type = string
 }
 variable "port" {
+	default = ""
 	description = "The exposed container port for the Docker image"
 	type = number
 }
