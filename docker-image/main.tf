@@ -61,7 +61,7 @@ resource "aws_s3_bucket_object" "default" {
 			"Name" = var.image
 		}
 		"Ports" = [
-			{ "ContainerPort" = var.port }
+			{ "ContainerPort" = tonumber(var.port) }
 		]
 	})
 	content_type = "application/json"
