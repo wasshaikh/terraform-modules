@@ -66,9 +66,14 @@ resource "aws_s3_bucket_object" "default" {
 	})
 	content_type = "application/json"
 }
+resource "time_sleep" "wait_for_s3_object" {
+	create_duration = "3s"
+	depends_on = [aws_s3_bucket_object.default]
+}
 resource "aws_elastic_beanstalk_application_version" "default" {
 	application = aws_elastic_beanstalk_application.default.name
 	bucket = aws_s3_bucket.default.id
+	depends_on = [time_sleep.wait_for_s3_object]
 	key = "Dockerrun.aws.json"
 	name = replace("${var.image}", "/", "\\")
 }
