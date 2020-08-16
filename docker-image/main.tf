@@ -59,6 +59,7 @@ resource "aws_s3_bucket_object" "default" {
 		}
 		"Image" = {
 			"Name" = var.image
+			"Update" = "true"
 		}
 		"Ports" = [
 			{ "ContainerPort" = var.port }
