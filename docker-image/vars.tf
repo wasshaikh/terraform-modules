@@ -13,7 +13,7 @@ variable "image" {
 	type = string
 
 	validation {
-		condition = length(var.image) > 100
+		condition = length(var.image) <= 100
 		error_message = "Varaible 'image' must be 100 or less characters in length"
 	}
 }
