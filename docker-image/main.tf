@@ -85,7 +85,8 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	name = var.name
 	solution_stack_name = "64bit Amazon Linux 2 v3.1.0 running Docker"
 	tier = var.type == "website" ? "WebServer" : "Worker"
-	version_label = aws_elastic_beanstalk_application_version.default.id
+	// For display purposes, get last 100 characters for version label
+	version_label = strrev(substr(strrev(aws_elastic_beanstalk_application_version.default.id), 0, 100))
 
 	setting {
 		name = "IamInstanceProfile"
