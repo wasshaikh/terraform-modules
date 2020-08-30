@@ -69,15 +69,19 @@ resource "aws_s3_bucket_object" "default" {
 }
 resource "time_sleep" "wait_for_s3_object" {
 	create_duration = "3s"
-	depends_on = [aws_s3_bucket_object.default]
+	depends_on = [
+		aws_s3_bucket_object.authentication,
+		aws_s3_bucket_object.default,
+	]
 }
 resource "aws_elastic_beanstalk_application_version" "default" {
 	application = aws_elastic_beanstalk_application.default.name
 	bucket = aws_s3_bucket.default.id
-	depends_on = [time_sleep.wait_for_s3_object]
 	key = "Dockerrun.aws.json"
 	// For display purposes, get last 100 characters for version label
 	name = strrev(substr(strrev(replace("${var.image}", "/", "\\")), 0, 100))
+
+	depends_on = [time_sleep.wait_for_s3_object]
 }
 
 // Create Application
