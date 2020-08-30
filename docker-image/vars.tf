@@ -11,6 +11,11 @@ variable "environment" {
 variable "image" {
 	description = "The application's docker image"
 	type = string
+
+	validation {
+		condition = length(var.image) > 100
+		error_message = "Varaible 'image' must be 100 or less characters in length"
+	}
 }
 variable "max" {
 	default = 10
