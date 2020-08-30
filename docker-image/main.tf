@@ -76,7 +76,8 @@ resource "aws_elastic_beanstalk_application_version" "default" {
 	bucket = aws_s3_bucket.default.id
 	depends_on = [time_sleep.wait_for_s3_object]
 	key = "Dockerrun.aws.json"
-	name = replace("${var.image}", "/", "\\")
+	// For display purposes, get last 100 characters for version label
+	name = strrev(substr(strrev(replace("${var.image}", "/", "\\")), 0, 100))
 }
 
 // Create Application
@@ -85,8 +86,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	name = var.name
 	solution_stack_name = "64bit Amazon Linux 2 v3.1.0 running Docker"
 	tier = var.type == "website" ? "WebServer" : "Worker"
-	// For display purposes, get last 100 characters for version label
-	version_label = strrev(substr(strrev(aws_elastic_beanstalk_application_version.default.id), 0, 100))
+	version_label = aws_elastic_beanstalk_application_version.default.id
 
 	setting {
 		name = "IamInstanceProfile"
