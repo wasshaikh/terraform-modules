@@ -1,9 +1,16 @@
 terraform {
-	experiments = [variable_validation]
-
 	required_providers {
-		aws = "~> 2.58"
-		random = "~> 2.3"
-		time = "~> 0.5"
+		aws = {
+			source = "hashicorp/aws"
+			version = "~> 2.58"
+		}
+		random = {
+			source = "hashicorp/random"
+			version = "~> 2.3"
+		}
+		time = {
+			source = "hashicorp/time"
+			version = "~> 0.5"
+		}
 	}
 }
