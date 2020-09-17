@@ -1,25 +1,24 @@
 // Create IAM role to manage elasticbeanstalk
 resource "aws_iam_role_policy_attachment" "default" {
-	// TODO: Restrict this policy
-	policy_arn  = "arn:aws:iam::aws:policy/AdministratorAccess"
+	// ? Is this appropriate access ?
+	policy_arn  = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
 	role = aws_iam_role.default.name
 }
 resource "aws_iam_role" "default" {
-	assume_role_policy = <<EOF
-{
-	"Statement": [
-		{
-			"Action": "sts:AssumeRole",
-			"Effect": "Allow",
-			"Principal": {
-				"Service": "ec2.amazonaws.com"
-			},
-			"Sid": ""
-		}
-	],
-	"Version": "2012-10-17"
+	assume_role_policy = data.aws_iam_policy_document.default.json
 }
-EOF
+data "aws_iam_policy_document" "default" {
+	version = "2012-10-17"
+
+	statement {
+		actions = ["sts:AssumeRole"]
+		effect = "Allow"
+
+		principals {
+			identifiers = ["ec2.amazonaws.com"]
+			type = "Service"
+		}
+	}
 }
 resource "aws_iam_instance_profile" "default" {
 	role = aws_iam_role.default.name
