@@ -1,7 +1,8 @@
 terraform {
-	experiments = [variable_validation]
-
 	required_providers {
-		heroku = "~> 2.5"
+		heroku = {
+			source = "heroku/heroku"
+			version = "~> 2.5"
+		}
 	}
 }
