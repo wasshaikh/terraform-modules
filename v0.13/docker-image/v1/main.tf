@@ -94,7 +94,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	setting {
 		name = "DeploymentPolicy"
 		namespace = "aws:elasticbeanstalk:command"
-		value = "Immutable"
+		value = "TrafficSplitting"
 	}
 	setting {
 		name = "IamInstanceProfile"
@@ -115,11 +115,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
 		name = "MinSize"
 		namespace = "aws:autoscaling:asg"
 		value = var.min
-	}
-	setting {
-		name = "RollingUpdateType"
-		namespace = "aws:autoscaling:updatepolicy:rollingupdate"
-		value = "Immutable"
 	}
 
 	// Environmental settings
