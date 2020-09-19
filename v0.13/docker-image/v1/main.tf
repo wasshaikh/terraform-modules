@@ -94,7 +94,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	setting {
 		name = "DeploymentPolicy"
 		namespace = "aws:elasticbeanstalk:command"
-		value = "TrafficSplitting"
+		value = "RollingWithAdditionalBatch"
 	}
 	setting {
 		name = "IamInstanceProfile"
