@@ -92,6 +92,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	version_label = aws_elastic_beanstalk_application_version.default.id
 
 	setting {
+		name = "DeploymentPolicy"
+		namespace = "aws:elasticbeanstalk:command"
+		value = "Immutable"
+	}
+	setting {
 		name = "IamInstanceProfile"
 		namespace = "aws:autoscaling:launchconfiguration"
 		value = aws_iam_instance_profile.default.name
