@@ -1,3 +1,3 @@
 data "sops_file" "default" {
-  	source_file = "${path.module}/${var.file_path}"
+  	source_file = "${var.file_path}"
 }
