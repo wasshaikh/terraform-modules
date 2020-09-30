@@ -104,7 +104,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	setting {
 		name = "InstanceTypes"
 		namespace = "aws:ec2:instances"
-		value = "t3.micro"
+		value = "t3.small"
 	}
 	setting {
 		name = "MaxSize"
