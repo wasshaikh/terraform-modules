@@ -1,5 +1,5 @@
 locals {
-	lambda_zip = "terraform_lambda.zip"
+	lambda_zip = "terraform_lambda_${var.name}.zip"
 }
 
 data "archive_file" "default" {
