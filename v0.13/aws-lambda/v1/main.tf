@@ -3,7 +3,7 @@ locals {
 }
 
 data "archive_file" "default" {
-	excludes = concat("terraform_${var.name}.zip", var.excluded_files)
+	excludes = concat(["terraform_${var.name}.zip"], var.excluded_files)
 	output_path = local.lambda_zip
 	source_dir = var.source_directory
 	type = "zip"
