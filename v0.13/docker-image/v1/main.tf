@@ -126,4 +126,15 @@ resource "aws_elastic_beanstalk_environment" "default" {
 			value = setting.value["value"]
 		}
 	}
+
+	// Advanced settings
+	// https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elastic_beanstalk_environment#option-settings
+	dynamic "setting" {
+		for_each = var.settings
+		content {
+			name = setting.value["key"]
+			namespace = setting.value["namespace"]
+			value = setting.value["value"]
+		}
+	}
 }

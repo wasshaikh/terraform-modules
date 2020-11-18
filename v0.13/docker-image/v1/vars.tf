@@ -46,6 +46,15 @@ variable "port" {
 	description = "The exposed container port for the Docker image"
 	type = number
 }
+variable "settings" {
+	default = []
+	description = "Configuration of AWS settings for ElasticBeanstalk"
+	type = list(object({
+		key = string
+		namespace = string
+		value = string
+	}))
+}
 variable "type" {
 	default = "worker"
 	description = "The type of instance that will be running"
