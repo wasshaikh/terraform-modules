@@ -50,7 +50,7 @@ variable "settings" {
 	default = []
 	description = "Configuration of AWS settings for ElasticBeanstalk"
 	type = list(object({
-		key = string
+		name = string
 		namespace = string
 		value = string
 	}))
