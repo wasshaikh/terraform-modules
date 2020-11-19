@@ -132,7 +132,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 	dynamic "setting" {
 		for_each = var.settings
 		content {
-			name = setting.value["key"]
+			name = setting.value["name"]
 			namespace = setting.value["namespace"]
 			value = setting.value["value"]
 		}
