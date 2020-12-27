@@ -78,7 +78,7 @@ resource "aws_elastic_beanstalk_application_version" "default" {
 	bucket = aws_s3_bucket.default.id
 	key = "Dockerrun.aws.json"
 	// For display purposes, get last 100 characters for version label
-	name = strrev(substr(strrev(replace("${var.image}", "/", "\\")), 0, 100))
+	name = strrev(substr(strrev(replace(var.image, "/", "\\")), 0, 100))
 
 	depends_on = [time_sleep.wait_for_s3_object]
 }
