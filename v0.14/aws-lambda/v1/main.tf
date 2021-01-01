@@ -28,6 +28,7 @@ resource "aws_lambda_function" "default" {
 	filename = local.lambda_zip
 	function_name = substr("${var.name}--${random_id.default.hex}", 0, 64)
 	handler = var.handler
+	memory_size = ceil(var.memory_mb)
 	role = aws_iam_role.default.arn
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256

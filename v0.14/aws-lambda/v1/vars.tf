@@ -12,6 +12,16 @@ variable "excluded_files" {
 variable "handler" {
 	type = string
 }
+variable "memory_mb" {
+	default = 128
+	type = number
+
+	// * https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html
+	validation {
+		condition = 128 <= var.memory_mb && var.memory_mb <= 10240
+		error_message = "Variable 'ram_mb' must be between 128 - 10,240 MB."
+	}
+}
 variable "name" {
 	type = string
 }
