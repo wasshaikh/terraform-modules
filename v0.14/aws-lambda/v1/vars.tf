@@ -21,3 +21,12 @@ variable "runtime" {
 variable "source_directory" {
 	type = string
 }
+variable "timeout_after_seconds" {
+	default = 3
+	type = number
+
+	validation {
+		condition = 0 <= var.timeout_after_seconds && var.timeout_after_seconds <= 900
+		error_message = "Variable 'timeout_after_seconds' must be between 0 - 900 seconds."
+	}
+}
