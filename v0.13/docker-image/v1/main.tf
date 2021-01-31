@@ -87,7 +87,7 @@ resource "aws_elastic_beanstalk_application_version" "default" {
 resource "aws_elastic_beanstalk_environment" "default" {
 	application = aws_elastic_beanstalk_application.default.name
 	name = var.name
-	solution_stack_name = "64bit Amazon Linux 2 v3.2.3 running Docker"
+	solution_stack_name = "64bit Amazon Linux 2 v3.2.4 running Docker"
 	tier = var.type == "website" ? "WebServer" : "Worker"
 	version_label = aws_elastic_beanstalk_application_version.default.id
 
