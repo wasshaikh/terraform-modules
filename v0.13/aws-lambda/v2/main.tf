@@ -31,6 +31,7 @@ resource "aws_lambda_function" "default" {
 	role = aws_iam_role.default.arn
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256
+	timeout = var.timeout_after_seconds
 
 	environment {
 		// * Environmental keys must not container hyphens "-" https://stackoverflow.com/a/60885479
