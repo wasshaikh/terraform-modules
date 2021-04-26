@@ -24,6 +24,10 @@ data "aws_iam_policy_document" "default" {
 resource "aws_iam_role" "default" {
 	assume_role_policy = data.aws_iam_policy_document.default.json
 }
+resource "aws_iam_role_policy_attachment" "default" {
+	policy_arn  = "arn:aws:iam::aws:policy/AWSLambdaBasicExecutionRole"
+	role = aws_iam_role.default.name
+}
 resource "aws_lambda_function" "default" {
 	filename = local.lambda_zip
 	function_name = substr("${var.name}--${random_id.default.hex}", 0, 64)
