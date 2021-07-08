@@ -38,10 +38,7 @@ resource "aws_lambda_function" "default" {
 	source_code_hash = data.archive_file.default.output_base64sha256
 	timeout = var.timeout_after_seconds
 
-	environment {
-		// * Environmental keys must not container hyphens "-" https://stackoverflow.com/a/60885479
-		variables = merge([for env in var.environment: { (env["key"]) = (env["value"]) }]...)
-	}
+	
 }
 resource "random_id" "default" {
 	byte_length = 32
