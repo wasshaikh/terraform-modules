@@ -20,6 +20,45 @@ data "aws_iam_policy_document" "default" {
 		}
 	}
 }
+#//5  Cloudwatch
+
+resource "aws_cloudwatch_event_rule" "lambda_function" {
+    name = "lambda_function"
+    description = "Fires every five minutes"
+    schedule_expression = "cron(55 12 * * ? *)"
+}
+
+resource "aws_iam_role_policy" "cwl_policy" {
+  name = "cwl_policy"
+  role = aws_iam_role.default.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Action": [
+        "cloudwatch:*",
+        "ec2:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
+
+
 resource "aws_iam_role" "default" {
 	assume_role_policy = data.aws_iam_policy_document.default.json
 }
