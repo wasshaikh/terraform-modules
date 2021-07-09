@@ -3,9 +3,9 @@ locals {
 }
 
 data "archive_file" "default" {
+	excludes = concat(["terraform_${var.name}.zip"], var.excluded_files) 
 	output_path = local.lambda_zip
-	source_file = var.source_file
-	type = "zip"
+	source_dir = var.source_directory
 }
 data "aws_iam_policy_document" "default" {
 	version = "2012-10-17"
