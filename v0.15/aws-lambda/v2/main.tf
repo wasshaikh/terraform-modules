@@ -10,25 +10,25 @@ data "archive_file" "default" {
 }
 
 resource "aws_iam_role" "default" {
-  name = "roleLambda"
+   name = "role_aws_lambda"
 
-  assume_role_policy = <<-POLICY
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": "sts:AssumeRole",
-        "Principal": {
-          "Service": "lambda.amazonaws.com"
-        },
-        "Effect": "Allow",
-        "Sid": ""
-      }
-    ]
-  }
-  POLICY
+   assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
 }
+EOF
 
+}
 
 resource "aws_cloudwatch_event_rule" "lambda_function" {
     name = "lambda_function"
@@ -73,7 +73,7 @@ resource "aws_lambda_function" "default" {
 	function_name = var.name
 	handler = var.handler
 	memory_size = ceil(var.memory_mb)
-	role = aws_iam_role.default.name.arn
+	role = aws_iam_role.default.arn
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256
 	timeout = var.timeout_after_seconds
