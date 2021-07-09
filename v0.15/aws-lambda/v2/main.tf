@@ -22,12 +22,9 @@ data "aws_iam_policy_document" "default" {
 	}
 }
 
-resource "aws_iam_role" "default" {
-	assume_role_policy = data.aws_iam_policy_document.default.json
-}
 resource "aws_iam_role_policy_attachment" "default" {
 	policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-	role = aws_iam_role.default.name
+	role = aws_iam_policy_document.default.name
 }
 
 
@@ -39,7 +36,7 @@ resource "aws_cloudwatch_event_rule" "lambda_function" {
 
 resource "aws_iam_role_policy" "cwl_policy" {
   name = "cwl_policy"
-  role = aws_iam_role.default.name
+  role = aws_iam_policy_document.default.name
 
   policy = <<EOF
 {
@@ -74,7 +71,7 @@ resource "aws_lambda_function" "default" {
 	function_name = var.name
 	handler = var.handler
 	memory_size = ceil(var.memory_mb)
-	role = aws_iam_role.default.name
+	role = aws_iam_policy_document.default.arn
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256
 	timeout = var.timeout_after_seconds
