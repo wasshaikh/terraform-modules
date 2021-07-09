@@ -6,6 +6,7 @@ data "archive_file" "default" {
 	excludes = concat(["terraform_${var.name}.zip"], var.excluded_files) 
 	output_path = local.lambda_zip
 	source_dir = var.source_directory
+	type = "zip"
 }
 data "aws_iam_policy_document" "default" {
 	version = "2012-10-17"
@@ -20,7 +21,15 @@ data "aws_iam_policy_document" "default" {
 		}
 	}
 }
-#//5  Cloudwatch
+
+resource "aws_iam_role" "default" {
+	assume_role_policy = data.aws_iam_policy_document.default.json
+}
+resource "aws_iam_role_policy_attachment" "default" {
+	policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+	role = aws_iam_role.default.name
+}
+
 
 resource "aws_cloudwatch_event_rule" "lambda_function" {
     name = "lambda_function"
@@ -30,7 +39,7 @@ resource "aws_cloudwatch_event_rule" "lambda_function" {
 
 resource "aws_iam_role_policy" "cwl_policy" {
   name = "cwl_policy"
-  role = aws_iam_role.default.id
+  role = aws_iam_role.default.name
 
   policy = <<EOF
 {
@@ -58,16 +67,14 @@ resource "aws_iam_role_policy" "cwl_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "default" {
-	policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-	role = aws_iam_role.default.name
-}
+
+
 resource "aws_lambda_function" "default" {
 	filename = local.lambda_zip
 	function_name = var.name
 	handler = var.handler
 	memory_size = ceil(var.memory_mb)
-	role = aws_iam_role.default.arn
+	role = aws_iam_role.default.name
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256
 	timeout = var.timeout_after_seconds
