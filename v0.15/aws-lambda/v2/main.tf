@@ -9,27 +9,6 @@ data "archive_file" "default" {
 	type = "zip"
 }
 
-resource "aws_iam_role" "default" {
-   name = "role_aws_lambda1"
-
-   assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-
-}
-
 resource "aws_cloudwatch_event_rule" "lambda_function" {
     name = "lambda_function1"
     description = "Fires every five minutes"
@@ -38,42 +17,16 @@ resource "aws_cloudwatch_event_rule" "lambda_function" {
 
 resource "aws_iam_role_policy" "cwl_policy" {
   name = "cwl_policy"
-  role = aws_iam_role.default.name
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "arn:aws:logs:*:*:*"
-    },
-    {
-      "Action": [
-        "cloudwatch:*",
-        "ec2:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
+  role = "arn:aws:iam::932709730335:role/aws-service-role/events.amazonaws.com/AWSServiceRoleForCloudWatchEvents"
 }
-EOF
-}
-
-
+ 
 
 resource "aws_lambda_function" "default" {
 	filename = local.lambda_zip
 	function_name = var.name
 	handler = var.handler
 	memory_size = ceil(var.memory_mb)
-	role = aws_iam_role.default.arn
+	role = "arn:aws:iam::932709730335:role/role_aws_lambda"
 	runtime = var.runtime
 	source_code_hash = data.archive_file.default.output_base64sha256
 	timeout = var.timeout_after_seconds
