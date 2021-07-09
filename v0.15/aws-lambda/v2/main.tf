@@ -10,7 +10,7 @@ data "archive_file" "default" {
 }
 
 resource "aws_iam_role" "default" {
-   name = "role_aws_lambda"
+   name = "role_aws_lambda1"
 
    assume_role_policy = <<EOF
 {
@@ -31,7 +31,7 @@ EOF
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_function" {
-    name = "lambda_function"
+    name = "lambda_function1"
     description = "Fires every five minutes"
     schedule_expression = "cron(55 12 * * ? *)"
 }
