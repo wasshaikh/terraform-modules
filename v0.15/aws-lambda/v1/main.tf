@@ -1,11 +1,10 @@
-locals {
+ocals {
 	lambda_zip = "${var.source_directory}/terraform_${var.name}.zip"
 }
 
 data "archive_file" "default" {
-	excludes = concat(["terraform_${var.name}.zip"], var.excluded_files)
 	output_path = local.lambda_zip
-	source_dir = var.source_directory
+	source_file = var.source_file
 	type = "zip"
 }
 data "aws_iam_policy_document" "default" {
@@ -21,6 +20,46 @@ data "aws_iam_policy_document" "default" {
 		}
 	}
 }
+#//5  Cloudwatch
+
+resource "aws_cloudwatch_event_rule" "lambda_function" {
+    name = "lambda_function"
+    description = "Fires every five minutes"
+    schedule_expression = "cron(55 12 * * ? *)"
+}
+
+resource "aws_iam_role_policy" "cwl_policy" {
+  name = "cwl_policy"
+  role = aws_iam_role.default.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Action": [
+        "cloudwatch:*",
+        "ec2:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+
+
 resource "aws_iam_role" "default" {
 	assume_role_policy = data.aws_iam_policy_document.default.json
 }
@@ -30,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "default" {
 }
 resource "aws_lambda_function" "default" {
 	filename = local.lambda_zip
-	function_name = substr("${var.name}--${random_id.default.hex}", 0, 64)
+	function_name = var.name
 	handler = var.handler
 	memory_size = ceil(var.memory_mb)
 	role = aws_iam_role.default.arn
@@ -39,7 +78,4 @@ resource "aws_lambda_function" "default" {
 	timeout = var.timeout_after_seconds
 
 	
-}
-resource "random_id" "default" {
-	byte_length = 32
 }
