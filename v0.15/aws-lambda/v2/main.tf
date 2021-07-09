@@ -9,7 +9,7 @@ data "archive_file" "default" {
 	type = "zip"
 }
 
-resource "aws_iam_role" "role_lambda" {
+resource "aws_iam_role" "default" {
   name = "roleLambda"
 
   assume_role_policy = <<-POLICY
