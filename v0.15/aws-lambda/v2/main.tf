@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "default" {
 resource "aws_cloudwatch_event_rule" "lambda_function" {
     name = "lambda_function"
     description = "Fires every five minutes"
-    schedule_expression = "cron(55 12 * * ? *)"
+    schedule_expression = "cron(5 * * * ? *)"
 }
 
 resource "aws_iam_role_policy" "cwl_policy" {
